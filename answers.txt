@@ -1,0 +1,28 @@
+Question 3: How long did it take to run the process locally and using EMR?
+
+Locally: output from time command:
+real	2m31.224s
+user	2m25.420s
+sys	0m5.182s
+
+EMR: output from time command: 
+real	23m35.566s
+user	0m2.144s
+sys	0m0.198s
+
+The local real time is much shorter, but much of the EMR 
+time is spent provisioning. 
+
+Questions 4 & 5: 
+There are 2042 address tags in both the local output
+and EMR output. In addition there are some other tags
+that have the term "address and the counts are the same. 
+
+"address"	2042
+"addresses"	19
+"addressother"	1
+"ccbillingaddress"	1
+"creditcardbillingaddress"	1
+"emailaddressalternate"	1
+"eoneaddress"	1
+"otheraddresses"	31
