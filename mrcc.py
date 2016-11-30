@@ -9,6 +9,10 @@ from mrjob.job import MRJob
 
 
 class CCJob(MRJob):
+  def configure_options(self):
+    super(CCJob, self).configure_options()
+    self.add_passthrough_option('--source',help="Source location of the common crawl data (s3 or file)")
+      
   def process_record(self, record):
     """
     Override process_record with your mapper
@@ -18,7 +22,8 @@ class CCJob(MRJob):
   def mapper(self, _, line):
     f = None
     ## If we're on EC2 or running on a Hadoop cluster, pull files via S3
-    if self.options.runner in ['emr', 'hadoop']:
+    if self.options.source in ['s3' ]:
+      print 'Downloading ...'
       # Connect to Amazon S3 using anonymous credentials
       conn = boto.connect_s3(anon=True)
       pds = conn.get_bucket('commoncrawl')

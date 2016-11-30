@@ -1,0 +1,6 @@
+3. locally: 2m15.550s
+emr: 24m8.374s
+
+4.# of address tags: 2042
+
+5. Yes.
