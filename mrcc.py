@@ -1,4 +1,5 @@
 import gzip
+import os.path as P
 #
 import boto
 import warc
@@ -9,6 +10,11 @@ from mrjob.job import MRJob
 
 
 class CCJob(MRJob):
+  def configure_options(self):
+    super(CCJob, self).configure_options()
+    self.pass_through_option('--runner')
+    self.pass_through_option('-r')
+
   def process_record(self, record):
     """
     Override process_record with your mapper
@@ -27,6 +33,7 @@ class CCJob(MRJob):
       f = warc.WARCFile(fileobj=GzipStreamFile(k))
     ## If we're local, use files on the local file system
     else:
+      line = P.join(P.abspath(P.dirname(__file__)), line)
       print 'Loading local file {}'.format(line)
       f = warc.WARCFile(fileobj=gzip.open(line))
     ###

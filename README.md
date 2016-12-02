@@ -66,11 +66,11 @@ If you're on Windows, you just need to download the files listed and place them 
 
 To run the jobs locally, you can simply run:
 
-    # we need to turn the relative paths in the input files into absolute paths before passing them to mrjob§
-    python absolutize_path.py < input/test-1.warc | python tag_counter.py --conf-path mrjob.conf --no-output --output-dir out
+    python tag_counter.py --conf-path mrjob.conf --no-output --output-dir out input/test-1.warc
     
-    # or 'local' simulates more features of Hadoop such as counters
-    python absolutize_path.py < input/test-1.warc | python tag_counter.py -r local --conf-path mrjob.conf --no-output --output-dir out
+Using the 'local' runner simulates more features of Hadoop, such as counters:
+
+    python tag_counter.py -r local --conf-path mrjob.conf --no-output --output-dir out input/test-1.warc
 
 ### Running via Elastic MapReduce
 
@@ -81,10 +81,23 @@ By default, EMR machines run with Python 2.6.
 The configuration file automatically installs Python 2.7 on your cluster for you.
 The steps to do this are documented in `mrjob.conf`.
 
+The three job examples in this repository (`tag_counter.py`, `server_analysis.py`, `word_count.py`) rely on a common module - `mrcc.py`.
+By default, this module will not be present when you run the examples on Elastic MapReduce, so you have to include it explicitly.
+You have two options:
+
+1. [Deploy your source tree as a tarball](http://pythonhosted.org/mrjob/guides/setup-cookbook.html#putting-your-source-tree-in-pythonpath)
+2. Copy-paste the code from mrcc.py into the job example that you are trying to run:
+
+        cat mrcc.py tag_counter.py | sed "s/from mrcc import CCJob//" > tag_counter_emr.py
+
+Thank you to @mpenkov for providing the above options.
+
 To run the job on Amazon Elastic MapReduce (their automated Hadoop cluster offering), you need to add your AWS access key ID and AWS access key to `mrjob.conf`.
 By default, the configuration file only launches two machines, both using spot instances to be cost effective.
 
-    python tag_counter.py -r emr --conf-path mrjob.conf --no-output --output-dir out input/test-100.warc
+Using option two as shown above, you can then run the script on EMR by running:
+
+    python tag_counter_emr.py -r emr --conf-path mrjob.conf --no-output --output-dir out input/test-100.warc
 
 If you are running this for a full fledged job, you will likely want to make the master server a normal instance, as spot instances can disappear at any time.
 
