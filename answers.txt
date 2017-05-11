@@ -1,0 +1,22 @@
+3) How long did it take to run the process for each of these?
+
+On my system:
+real     2m55.532s
+user     2m56.228s
+sys     0m3.930s
+
+
+On AWS 
+282.0s (not counting time spent waiting for the EC2 instances)
+time count
+real     12m37.980s
+user     0m1.517s
+sys     0m0.229s
+
+
+4) How many address tags are there in the input?
+5140
+
+
+5) Does the local version and EMR version give the same answer?
+They give the same number of rows
