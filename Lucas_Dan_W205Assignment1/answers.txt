@@ -1,0 +1,22 @@
+Lucas Dan
+W205 Section 3 Assignment 1
+
+1. See ‘out’ file
+
+2. See ‘emr-out’ file
+
+3. When running locally: real 116.79 user 117.12 sys 3.45
+When running with AWS: real 12m29.399s user 0m1.124s sys 0m0.136s
+
+4. out file:
+part-00000 = 7305068 addresses
+part-00001 = 26036789 addresses
+Total in out file = 33341857 addresses
+
+emr-out file:
+part-00000 = 10814184 addresses
+part-00001 = 9052945 addresses
+part-00002 = 13474728 addresses
+Total in emr-out file = 33341857 addresses
+
+5. Yes, the local version and EMR version give the same total number of addresses!
