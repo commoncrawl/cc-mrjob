@@ -1,4 +1,5 @@
 import gzip
+import logging
 import os.path as Path
 import boto
 import warc
@@ -25,13 +26,14 @@ class CCJob(MRJob):
             # Connect to Amazon S3 using anonymous credentials
             conn = boto.connect_s3(anon=True)
             pds = conn.get_bucket('commoncrawl')
+            logging.info('Loading s3://commoncrawl/{}'.format(line))
             # Start a connection to one of the WARC files
             k = Key(pds, line)
             ccfile = warc.WARCFile(fileobj=GzipStreamFile(k))
         # If we're local, use files on the local file system
         else:
             line = Path.join(Path.abspath(Path.dirname(__file__)), line)
-            print 'Loading local file {}'.format(line)
+            logging.info('Loading local file {}'.format(line))
             ccfile = warc.WARCFile(fileobj=gzip.open(line))
 
         for i, record in enumerate(ccfile):
