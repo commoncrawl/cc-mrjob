@@ -11,5 +11,5 @@ for ccfile in ${ccfiles[@]}; do
   mkdir -p `dirname $ccfile`
   echo "Downloading `basename $ccfile` ..."
   echo "---"
-  wget --no-clobber https://commoncrawl.s3.amazonaws.com/$ccfile -O $ccfile
+  wget --no-clobber https://data.commoncrawl.org/$ccfile -O $ccfile
 done

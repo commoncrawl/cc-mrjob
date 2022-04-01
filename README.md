@@ -1,4 +1,4 @@
-![Common Crawl Logo](http://commoncrawl.org/wp-content/uploads/2016/12/logocommoncrawl.png)
+![Common Crawl Logo](https://commoncrawl.org/wp-content/uploads/2016/12/logocommoncrawl.png)
 
 # mrjob starter kit
 
@@ -27,7 +27,7 @@ If you would like to create a virtual environment to protect local dependencies:
     pip install -r requirements.txt
 
 To develop locally, you'll need at least three data files -- one for each format the crawl uses.
-These can either be downloaded by running the `get-data.sh` command line program or manually by grabbing the [WARC](https://commoncrawl.s3.amazonaws.com/crawl-data/CC-MAIN-2014-35/segments/1408500800168.29/warc/CC-MAIN-20140820021320-00000-ip-10-180-136-8.ec2.internal.warc.gz), [WAT](https://commoncrawl.s3.amazonaws.com/crawl-data/CC-MAIN-2014-35/segments/1408500800168.29/wat/CC-MAIN-20140820021320-00000-ip-10-180-136-8.ec2.internal.warc.wat.gz), and [WET](https://commoncrawl.s3.amazonaws.com/crawl-data/CC-MAIN-2014-35/segments/1408500800168.29/wet/CC-MAIN-20140820021320-00000-ip-10-180-136-8.ec2.internal.warc.wet.gz) files.
+These can either be downloaded by running the `get-data.sh` command line program or manually by grabbing the [WARC](https://data.commoncrawl.org/crawl-data/CC-MAIN-2014-35/segments/1408500800168.29/warc/CC-MAIN-20140820021320-00000-ip-10-180-136-8.ec2.internal.warc.gz), [WAT](https://data.commoncrawl.org/crawl-data/CC-MAIN-2014-35/segments/1408500800168.29/wat/CC-MAIN-20140820021320-00000-ip-10-180-136-8.ec2.internal.warc.wat.gz), and [WET](https://data.commoncrawl.org/crawl-data/CC-MAIN-2014-35/segments/1408500800168.29/wet/CC-MAIN-20140820021320-00000-ip-10-180-136-8.ec2.internal.warc.wet.gz) files.
 
 ## Running the code
 
@@ -79,7 +79,7 @@ Using the 'local' runner simulates more features of Hadoop, such as counters:
 
 ### Running via Elastic MapReduce
 
-As the Common Crawl dataset lives in the Amazon Public Datasets program, you can access and process it without incurring any transfer costs.
+As the Common Crawl dataset lives in the [Amazon Web Services’ Open Data Sets Sponsorships](https://aws.amazon.com/opendata/) program, you can [access it for free](https://commoncrawl.org/access-the-data/).
 The only cost that you incur is the cost of the machines and Elastic MapReduce itself.
 
 By default, EMR machines run with Python 2.6.
@@ -90,7 +90,7 @@ The three job examples in this repository (`tag_counter.py`, `server_analysis.py
 By default, this module will not be present when you run the examples on Elastic MapReduce, so you have to include it explicitly.
 You have two options:
 
-1. [Deploy your source tree as a tar ball](http://pythonhosted.org/mrjob/guides/setup-cookbook.html#uploading-your-source-tree-as-an-archive)
+1. [Deploy your source tree as a tar ball](https://mrjob.readthedocs.io/en/latest/guides/setup-cookbook.html#uploading-your-source-tree)
 2. Copy-paste the code from mrcc.py into the job example that you are trying to run:
 
         cat mrcc.py tag_counter.py | sed "s/from mrcc import CCJob//" > tag_counter_emr.py
@@ -112,7 +112,7 @@ To launch the job on a Hadoop cluster of AWS EC2 instances (e.g., CDH), see the 
 
 To run your mrjob task over the entirety of the Common Crawl dataset, you can use the WARC, WAT, or WET file listings found at `CC-MAIN-YYYY-WW/[warc|wat|wet].paths.gz`.
 
-As an example, the [August 2014 crawl](http://commoncrawl.org/august-2014-crawl-data-available/) has 52,849 WARC files listed by [warc.paths.gz](https://commoncrawl.s3.amazonaws.com/crawl-data/CC-MAIN-2014-35/warc.paths.gz). You'll find pointers to listings for all crawls including the most recent ones on the [commoncrawl Public Data Set bucket](https://commoncrawl.s3.amazonaws.com/crawl-data/index.html) and the [get-started page](https://commoncrawl.org/the-data/get-started/).
+As an example, the [August 2014 crawl](https://commoncrawl.org/august-2014-crawl-data-available/) has 52,849 WARC files listed by [warc.paths.gz](https://data.commoncrawl.org/crawl-data/CC-MAIN-2014-35/warc.paths.gz). You'll find pointers to listings for all crawls including the most recent ones on the [commoncrawl Public Data Set bucket](https://data.commoncrawl.org/crawl-data/index.html) and the [get-started page](https://commoncrawl.org/the-data/get-started/).
 
 It is highly recommended to run over batches of files at a time and then perform a secondary reduce over those results.
 Running a single job over the entirety of the dataset complicates the situation substantially.

@@ -51,7 +51,6 @@ class CCJob(MRJob):
         if self.options.runner in ['emr', 'hadoop']:
             # Connect to Amazon S3 using anonymous credentials
             boto_config = botocore.client.Config(
-                signature_version=botocore.UNSIGNED,
                 read_timeout=180,
                 retries={'max_attempts' : 20})
             if self.options.bucket != 'commoncrawl':
