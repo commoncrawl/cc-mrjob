@@ -1,7 +1,7 @@
 import re
 from mrcc import CCJob
 
-server_regex = re.compile('^server:\s*(.+)$', re.I)
+server_regex = re.compile(b'^server:\s*(.+)$', re.IGNORECASE)
 
 
 class ServerCount(CCJob):
@@ -20,7 +20,7 @@ class ServerCount(CCJob):
             match = server_regex.match(line)
             if match:
                 server = match.group(1).strip()
-                yield server, 1
+                yield server.decode('iso-8859-1'), 1
                 return
             elif line.strip() == '':
                 # empty line indicates end of HTTP response header

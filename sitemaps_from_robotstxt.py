@@ -1,5 +1,6 @@
 import logging
 import re
+import sys
 
 import mrjob
 
@@ -13,17 +14,18 @@ except ImportError:
     from urllib.parse import urljoin
 
 from mrcc import CCJob
+from mrjob.util import log_to_stream
 
 
 LOG = logging.getLogger('SitemapExtractor')
-mrjob.util.log_to_stream(format="%(asctime)s %(levelname)s %(name)s: %(message)s",
-                         name='SitemapExtractor')
+log_to_stream(format="%(asctime)s %(levelname)s %(name)s: %(message)s",
+              name='SitemapExtractor', stream=sys.stderr)
 
 
 class SitemapExtractor(CCJob):
     """Extract sitemap URLs (http://www.sitemaps.org/) from robots.txt WARC files."""
 
-    sitemap_pattern = re.compile('^sitemap:\\s*(\\S+)', re.I)
+    sitemap_pattern = re.compile(b'^sitemap:\\s*(\\S+)', re.IGNORECASE)
 
     def process_record(self, record):
         """emit: sitemap_url => [host]"""
@@ -43,10 +45,10 @@ class SitemapExtractor(CCJob):
                 self.increment_counter('commoncrawl', 'sitemap URLs found', 1)
                 n_sitemaps += 1
                 try:
-                    sitemap_url.decode("utf-8", "strict")
+                    sitemap_url = sitemap_url.decode('utf-8', 'strict')
                 except UnicodeDecodeError:
                     # invalid encoding, ignore
-                    # LOG.warn('Invalid encoding of sitemap URL: %s', sitemap_url)
+                    # LOG.warning('Invalid encoding of sitemap URL: %s', sitemap_url)
                     self.increment_counter('commoncrawl', 'sitemap URL invalid encoding', 1)
                     continue
 
@@ -57,11 +59,11 @@ class SitemapExtractor(CCJob):
                         host = urlparse(url).netloc.lower().lstrip('.')
                     except Exception as url_parse_error:
                         try:
-                            LOG.warn('Invalid robots.txt URL: %s - %s',
-                                     url, url_parse_error)
+                            LOG.warning('Invalid robots.txt URL: %s - %s',
+                                        url, url_parse_error)
                         except UnicodeEncodeError as unicode_error:
-                            LOG.warn('Invalid robots.txt URL - %s - %s',
-                                     url_parse_error, unicode_error)
+                            LOG.warning('Invalid robots.txt URL - %s - %s',
+                                        url_parse_error, unicode_error)
                         self.increment_counter('commoncrawl', 'invalid robots.txt URL', 1)
                         # skip this robots.txt record
                         return
@@ -74,8 +76,8 @@ class SitemapExtractor(CCJob):
         if n_sitemaps > 0:
             self.increment_counter('commoncrawl', 'robots.txt files announcing a sitemap', 1)
         if n_sitemaps > 50:
-            LOG.warn('Unexpectedly large number of sitemaps (%d) announced in robots.txt URL: %s',
-                     n_sitemaps, url)
+            LOG.warning('Unexpectedly large number of sitemaps (%d) announced in robots.txt URL: %s',
+                        n_sitemaps, url)
             self.increment_counter('commoncrawl',
                                    'robots.txt files with more than 50 sitemap URLs', 1)
 
@@ -87,9 +89,9 @@ class SitemapExtractor(CCJob):
             sitemap_uri = urlparse(key)
         except Exception as url_parse_error:
             try:
-                LOG.warn('Invalid sitemap URL: %s - %s', key, url_parse_error)
+                LOG.warning('Invalid sitemap URL: %s - %s', key, url_parse_error)
             except UnicodeEncodeError as unicode_error:
-                LOG.warn('Invalid sitemap URL - %s - %s', url_parse_error, unicode_error)
+                LOG.warning('Invalid sitemap URL - %s - %s', url_parse_error, unicode_error)
             self.increment_counter('commoncrawl', 'invalid sitemap URL', 1)
             return
 

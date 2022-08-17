@@ -44,7 +44,7 @@ else
 	S3_BUCKET=""
 fi
 
-python $JOB.py \
+python3 $JOB.py \
        -r hadoop \
        --jobconf "mapreduce.map.memory.mb=1200" \
        --jobconf "mapreduce.map.java.opts=-Xmx1024m" \

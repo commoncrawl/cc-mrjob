@@ -1,23 +1,44 @@
 import gzip
 import logging
 import os.path as Path
+import sys
 
 from tempfile import TemporaryFile
 
 import boto3
 import botocore
-import warc
 
 from mrjob.job import MRJob
 from mrjob.util import log_to_stream
 
-from gzipstream import GzipStreamFile
-
+# Define which WARC/ARC parsing library should be used:
+#  'warc'
+#     - used originally with Python 2.x, see
+#         https://github.com/internetarchive/warc
+#         https://warc.readthedocs.io/en/latest/
+#     - forked to support Python 3
+#         https://github.com/commoncrawl/warc
+#  'warcio'
+#     - https://pypi.org/project/warcio/
+#  'fastwarc'
+#     - https://resiliparse.chatnoir.eu/en/latest/api/fastwarc.html
+#
+# Both warcio and and fastwarc are wrapped for API-compatibility
+# but this also means that the full API of warcio and fastwarc is not available.
+#
+WARC_PARSER = 'warc'
+if WARC_PARSER == 'warc':
+    import warc
+elif WARC_PARSER == 'warcio':
+    import warcio_warc_wrapper as warc
+elif WARC_PARSER == 'fastwarc':
+    import fastwarc_warc_wrapper as warc
 
 # Set up logging - must ensure that log_to_stream(...) is called only once
 # to avoid duplicate log messages (see https://github.com/Yelp/mrjob/issues/1551).
 LOG = logging.getLogger('CCJob')
-log_to_stream(format="%(asctime)s %(levelname)s %(name)s: %(message)s", name='CCJob')
+log_to_stream(format="%(asctime)s %(levelname)s %(name)s: %(message)s",
+              name='CCJob', stream=sys.stderr)
 
 
 class CCJob(MRJob):
@@ -81,12 +102,19 @@ class CCJob(MRJob):
                 LOG.error('Failed to download %s: %s', line, exception)
                 return
             temp.seek(0)
-            ccfile = warc.WARCFile(fileobj=(GzipStreamFile(temp)))
+            compressed = line.endswith('.gz')
+            if line.endswith('.arc') or line.endswith('.arc.gz'):
+                ccfile = warc.ARCFile(fileobj=temp, compress=compressed)
+            else:
+                ccfile = warc.WARCFile(fileobj=temp, compress=compressed)
         # If we're local, use files on the local file system
         else:
             line = Path.join(Path.abspath(Path.dirname(__file__)), line)
             LOG.info('Loading local file %s', line)
-            ccfile = warc.WARCFile(fileobj=gzip.open(line))
+            if line.endswith('.arc') or line.endswith('.arc.gz'):
+                ccfile = warc.ARCFile(filename=line)
+            else:
+                ccfile = warc.WARCFile(filename=line)
 
         for _i, record in enumerate(ccfile):
             for key, value in self.process_record(record):

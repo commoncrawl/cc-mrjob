@@ -1,4 +1,5 @@
 boto3
-mrjob
-warc
-https://github.com/commoncrawl/gzipstream/archive/master.zip
+mrjob[aws]
+warcio
+fastwarc
+-e git+https://github.com/commoncrawl/warc.git@main#egg=warc

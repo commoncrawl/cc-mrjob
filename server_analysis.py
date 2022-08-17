@@ -1,4 +1,9 @@
-import json
+try:
+    # try to load the more efficient ujson
+    import ujson as json
+except ImportError:
+    import json
+
 from mrcc import CCJob
 
 

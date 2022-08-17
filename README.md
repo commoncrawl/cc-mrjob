@@ -1,8 +1,8 @@
 ![Common Crawl Logo](https://commoncrawl.org/wp-content/uploads/2016/12/logocommoncrawl.png)
 
-# mrjob starter kit
+# Common Crawl mrjob starter kit
 
-This project demonstrates using Python to process the Common Crawl dataset with the mrjob framework.
+This project demonstrates using Python to process the Common Crawl dataset with the [mrjob framework](https://mrjob.readthedocs.io/en/latest/).
 There are three tasks to run using the three different data formats:
 
 + Counting HTML tags using Common Crawl's raw response data (WARC files)
@@ -77,16 +77,18 @@ Using the 'local' runner simulates more features of Hadoop, such as counters:
 
     python tag_counter.py -r local --conf-path mrjob.conf --no-output --output-dir output/ input/test-1.warc
 
+Note: Python 3 is required. Eventually and depending on the underlying operating system, you need to run the jobs calling the executable `python3`. If you need the older version running on Python 2.7 (not maintained anymore), please checkout the git branch `python-2.7` instead.
+
 ### Running via Elastic MapReduce
 
 As the Common Crawl dataset lives in the [Amazon Web Services’ Open Data Sets Sponsorships](https://aws.amazon.com/opendata/) program, you can [access it for free](https://commoncrawl.org/access-the-data/).
 The only cost that you incur is the cost of the machines and Elastic MapReduce itself.
 
-By default, EMR machines run with Python 2.6.
-The configuration file automatically installs Python 2.7 on your cluster for you.
-The steps to do this are documented in `mrjob.conf`.
+By default, EMR machines run with Python 3.x.
+The configuration file automatically installs Python 3 on your cluster for you.
+The steps to do this are documented in [mrjob.conf](./mrjob.conf).
 
-The three job examples in this repository (`tag_counter.py`, `server_analysis.py`, `word_count.py`) rely on a common module - `mrcc.py`.
+The three job examples in this repository ([tag_counter.py](./tag_counter.py), [server_analysis.py](./server_analysis.py), [word_count.py](./word_count.py) rely on a common module - [mrcc.py](./mrcc.py).
 By default, this module will not be present when you run the examples on Elastic MapReduce, so you have to include it explicitly.
 You have two options:
 

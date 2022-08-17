@@ -1,7 +1,20 @@
-import json
-from urlparse import urlparse
+import functools
+
 from mrcc import CCJob
 from mrjob.step import MRStep
+
+try:
+    # try to load the more efficient ujson
+    import ujson as json
+except ImportError:
+    import json
+
+try:
+    # Python2
+    from urlparse import urlparse
+except ImportError:
+    # Python3
+    from urllib.parse import urlparse
 
 
 class ServerAnalysis(CCJob):
@@ -34,13 +47,13 @@ class ServerAnalysis(CCJob):
         # Take a list of tuples of domains, combine them, find only the unique ones (using a set), return a new tuple
         # (example: [('msn.com'), ('wikipedia.org', 'msn.com'), (...)])
         # Note: tuple is required as they will be hashed during the MapReduce process
-        out_val = set(reduce(lambda x, y: x + y, value))
+        out_val = set(functools.reduce(lambda x, y: x + y, value))
         yield key, tuple(out_val)
 
     def reducer_count_total(self, key, value):
         # Return the total number of elements in value, which will only be one item in length
         # If it was more than one in length, we would turn this into a for loop
-        yield key, len(value.next())
+        yield key, len(next(value))
 
     def steps(self):
         return [

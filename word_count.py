@@ -7,8 +7,8 @@ class WordCount(CCJob):
         if record['Content-Type'] != 'text/plain':
             return
 
-        data = record.payload.read()
-        for word, count in Counter(data.split()).iteritems():
+        text = record.payload.read().decode('utf-8', 'strict')
+        for word, count in Counter(text.split()).items():
             yield word, 1
 
         self.increment_counter('commoncrawl', 'processed_pages', 1)
