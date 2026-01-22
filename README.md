@@ -1,4 +1,10 @@
-![Common Crawl Logo](https://commoncrawl.org/wp-content/uploads/2016/12/logocommoncrawl.png)
+![Common Crawl Logo](https://cdn.prod.website-files.com/6479b8d98bf5dcb4a69c4f31/649b5869af56f6df617cfb1f_CC_Logo_Blue_Auto.svg)
+
+# Sunsetting cc-mrjob
+
+Stephen Merity started [cc-mrjob](https://github.com/Smerity/cc-mrjob) in 2014. It can easily be adapted to almost any use case by simply overriding the class `CCJob` and implementing a single method (`process_record`). Based on [Yelp's mrjob](https://github.com/Yelp/mrjob/), the jobs can be run and scaled on MapReduce. It is a great project!
+
+However, twelve years later it's time to say goodbye and sunset the project. Two of its bases, [mrjob](https://github.com/Yelp/mrjob/) and the [warc](https://github.com/internetarchive/warc) module, are no longer maintained. Running the jobs has become a burden. Please transition to its successor, [cc-pyspark](https://github.com/commoncrawl/cc-pyspark). All examples of cc-mrjob are also available in cc-pyspark.
 
 # mrjob starter kit
 
@@ -11,6 +17,8 @@ There are three tasks to run using the three different data formats:
 
 In addition, there is a more complex version of the server analysis tool that will only count unique domains.
 This provides a good example of a more complex MapReduce job that involves an additional reduce step.
+
+The project was developed for Python 2. See [PR #31](https://github.com/commoncrawl/cc-mrjob/pull/31) for a port to Python 3.
 
 ## Setup
 
