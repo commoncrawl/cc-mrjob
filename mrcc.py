@@ -7,6 +7,9 @@ from tempfile import TemporaryFile
 import boto3
 import botocore
 import warc
+# work-around to enable support of WARC/1.1
+if '1.1' not in warc.warc.WARCReader.SUPPORTED_VERSIONS:
+    warc.warc.WARCReader.SUPPORTED_VERSIONS.append('1.1')
 
 from mrjob.job import MRJob
 from mrjob.util import log_to_stream
